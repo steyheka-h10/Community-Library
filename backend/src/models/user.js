@@ -2,10 +2,10 @@ const db = require('../db');
 
 async function usernameExists(username) {
   const result = await db.query(
-    'SELECT COUNT(*) FROM users WHERE username = $1',
+    'SELECT EXISTS(SELECT 1 FROM users WHERE username = $1) AS exists',
     [username]
   );
-  return result.rows[0].count > 0;
+  return result.rows[0].exists;
 }
 
 module.exports = { usernameExists };
