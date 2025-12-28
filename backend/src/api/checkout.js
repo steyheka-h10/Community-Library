@@ -2,10 +2,10 @@ const db = require('../db');
 
 async function checkBookAvailability(bookId) {
   const result = await db.query(
-    'SELECT COUNT(*) FROM copies WHERE book_id = $1 AND available = true',
+    'SELECT EXISTS(SELECT 1 FROM copies WHERE book_id = $1 AND available = true) AS exists',
     [bookId]
   );
-  return result.rows[0].count > 0;
+  return result.rows[0].exists;
 }
 
 app.post('/checkout', async (req, res) => {
